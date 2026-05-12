@@ -27,6 +27,7 @@ Optional but useful:
 
 ```sh
 brew install terraform helm
+brew install starship zoxide
 brew install --cask font-fira-code
 ```
 
@@ -35,6 +36,7 @@ Notes:
 - `ripgrep`, `fd`, and `make` are needed by the Neovim setup
 - `terraform` is useful because the config uses `terraform_fmt`
 - `helm` is useful if you want the full Helm workflow
+- `starship` and `zoxide` are used by `.bashrc`
 - `kitty` is configured with `font_family Fira Code`, so install that font if you want the same look
 
 ## 4. Clone the dotfiles repo
@@ -51,6 +53,10 @@ mkdir -p "$HOME/.config"
 ln -sfn "$HOME/Projects/Dotfiles/nvim" "$HOME/.config/nvim"
 ln -sfn "$HOME/Projects/Dotfiles/kitty" "$HOME/.config/kitty"
 ln -sfn "$HOME/Projects/Dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
+ln -sfn "$HOME/Projects/Dotfiles/.bashrc" "$HOME/.bashrc"
+ln -sfn "$HOME/Projects/Dotfiles/.bash_profile" "$HOME/.bash_profile"
+ln -sfn "$HOME/Projects/Dotfiles/.profile" "$HOME/.profile"
+ln -sfn "$HOME/Projects/Dotfiles/.inputrc" "$HOME/.inputrc"
 ```
 
 ## 6. Start Neovim once
@@ -97,7 +103,9 @@ echo 'stty -ixon' >> "$HOME/.zshrc"
 
 - `kitty` uses OS-specific includes, so the same config works on Linux and macOS
 - `tmux` auto-selects clipboard integration using `pbcopy` on macOS
-- `kitty` currently launches `/bin/bash`; this works on macOS, but if you prefer `zsh` you can change `shell /bin/bash` later
+- `kitty` currently launches `/bin/bash`, so linking `.bashrc` matters if you want the same shell behavior
+- `.bashrc` auto-attaches to tmux when opening an interactive shell and `tmux` is installed
+- `.bashrc` is now guarded so optional tools such as `bash-it`, `ble.sh`, `starship`, and `zoxide` do not break startup if they are missing
 - the Neovim config is already adapted for macOS-only fallbacks where needed
 
 ## 9. Recommended first checks
