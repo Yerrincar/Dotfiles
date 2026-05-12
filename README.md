@@ -1,2 +1,7 @@
 # Dotfiles
-my dotfiles
+
+My dotfiles.
+
+## Guides
+
+- [macOS setup](./MACOS.md)
