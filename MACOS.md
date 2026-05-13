@@ -60,6 +60,7 @@ Notes for these shell tools:
 
 - `bash-it` is loaded from `~/.bash_it/bash_it.sh`
 - `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
+- if `~/.bashrc` is symlinked to this repo, do not let installers append lines to it manually afterward; this repo already contains the `ble.sh` sourcing logic
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
 - the macOS kitty/tmux config in this repo is set up to use Homebrew Bash at `/opt/homebrew/bin/bash`
 
