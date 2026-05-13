@@ -61,6 +61,7 @@ Notes for these shell tools:
 - `bash-it` is loaded from `~/.bash_it/bash_it.sh`
 - `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
+- the macOS kitty/tmux config in this repo is set up to use Homebrew Bash at `/opt/homebrew/bin/bash`
 
 Notes:
 
@@ -136,7 +137,8 @@ echo 'stty -ixon' >> "$HOME/.zshrc"
 
 - `kitty` uses OS-specific includes, so the same config works on Linux and macOS
 - `tmux` auto-selects clipboard integration using `pbcopy` on macOS
-- `kitty` currently launches `/bin/bash`, so linking `.bashrc` matters if you want the same shell behavior
+- `kitty` launches Homebrew Bash on macOS via `kitty/os/macos.conf`
+- `tmux` panes also prefer Homebrew Bash on macOS
 - `.bashrc` auto-attaches to tmux when opening an interactive shell and `tmux` is installed
 - `.bashrc` is now guarded so optional tools such as `bash-it`, `ble.sh`, `starship`, and `zoxide` do not break startup if they are missing
 - the Neovim config is already adapted for macOS-only fallbacks where needed

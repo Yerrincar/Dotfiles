@@ -14,6 +14,12 @@ case $- in
 *) return ;;
 esac
 
+# Start tmux as early as possible so the outer shell does not spend time
+# loading the full interactive stack before immediately exec-ing into tmux.
+if [[ -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
+  exec tmux new-session -A -s main
+fi
+
 # Path to the bash it configuration
 export BASH_IT="$HOME/.bash_it"
 
@@ -92,15 +98,6 @@ export LANG=en_US.UTF-8
 
 # Uncomment this to make Bash-it create alias reload.
 # export BASH_IT_RELOAD_LEGACY=1
-if [[ -f "$HOME/.inputrc" ]]; then
-  bind -f "$HOME/.inputrc"
-fi
-
-# Load Bash It
-if [[ -f "$BASH_IT/bash_it.sh" ]]; then
-  source "$BASH_IT/bash_it.sh"
-fi
-
 # Cargar ble.sh (Bash Line Editor) sin adjuntar aún
 if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
   source "$HOME/.local/share/blesh/ble.sh" --noattach
@@ -109,6 +106,15 @@ fi
 if [[ -n ${BLE_VERSION-} ]]; then
 	ble-face auto_complete=fg=250
 	ble-face syntax_error=fg=231
+fi
+
+if [[ -f "$HOME/.inputrc" ]]; then
+  bind -f "$HOME/.inputrc"
+fi
+
+# Load Bash It
+if [[ -f "$BASH_IT/bash_it.sh" ]]; then
+  source "$BASH_IT/bash_it.sh"
 fi
 
 #Iniciamos starship y zoxide
@@ -122,11 +128,6 @@ fi
 
 # Adjuntar ble.sh ahora que el prompt (Starship) está inicializado
 [[ ${BLE_VERSION-} ]] && ble-attach
-
-# Iniciar tmux automáticamente si estamos en una terminal interactiva
-if [[ -z "$TMUX" ]] && [[ $- == *i* ]] && command -v tmux &>/dev/null; then
-	exec tmux new-session -A -s main
-fi
 
 if [[ -f "$HOME/.local/bin/env" ]]; then
   . "$HOME/.local/bin/env"
