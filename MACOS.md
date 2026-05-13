@@ -42,8 +42,26 @@ Optional but useful:
 ```sh
 brew install terraform helm
 brew install starship zoxide
+brew install bash bash-completion@2
 brew install --cask font-fira-code
 ```
+
+Install the extra Bash tools expected by `.bashrc`:
+
+```sh
+git clone https://github.com/Bash-it/bash-it.git "$HOME/.bash_it"
+"$HOME/.bash_it/install.sh" --silent
+curl -L https://github.com/akinomyoga/ble.sh/releases/latest/download/ble.sh.tar.xz \
+  | tar -xJf - -C /tmp
+mkdir -p "$HOME/.local/share/blesh"
+cp -R /tmp/ble.sh*/* "$HOME/.local/share/blesh"
+```
+
+Notes for these shell tools:
+
+- `bash-it` is loaded from `~/.bash_it/bash_it.sh`
+- `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
+- Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
 
 Notes:
 
@@ -51,6 +69,7 @@ Notes:
 - `terraform` is useful because the config uses `terraform_fmt`
 - `helm` is useful if you want the full Helm workflow
 - `starship` and `zoxide` are used by `.bashrc`
+- `bash-it` and `ble.sh` are also used by `.bashrc`
 - `kitty` is configured with `font_family Fira Code`, so install that font if you want the same look
 - the Bash files in this repo also bootstrap the Homebrew path for Bash shells opened from Kitty
 
