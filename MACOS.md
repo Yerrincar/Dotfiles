@@ -23,6 +23,20 @@ brew install git neovim tmux ripgrep fd make
 brew install --cask kitty
 ```
 
+If Homebrew tells you to add shell integration, do it. On Apple Silicon this is usually:
+
+```sh
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+On Intel Macs it is usually:
+
+```sh
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> "$HOME/.zprofile"
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
 Optional but useful:
 
 ```sh
@@ -38,6 +52,7 @@ Notes:
 - `helm` is useful if you want the full Helm workflow
 - `starship` and `zoxide` are used by `.bashrc`
 - `kitty` is configured with `font_family Fira Code`, so install that font if you want the same look
+- the Bash files in this repo also bootstrap the Homebrew path for Bash shells opened from Kitty
 
 ## 4. Clone the dotfiles repo
 
