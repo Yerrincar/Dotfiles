@@ -51,10 +51,9 @@ Install the extra Bash tools expected by `.bashrc`:
 ```sh
 git clone https://github.com/Bash-it/bash-it.git "$HOME/.bash_it"
 "$HOME/.bash_it/install.sh" --silent
-curl -L https://github.com/akinomyoga/ble.sh/releases/latest/download/ble.sh.tar.xz \
-  | tar -xJf - -C /tmp
-mkdir -p "$HOME/.local/share/blesh"
-cp -R /tmp/ble.sh*/* "$HOME/.local/share/blesh"
+curl -L https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly.tar.xz \
+  | tar xJf - -C /tmp
+bash /tmp/ble-nightly/ble.sh --install ~/.local/share
 ```
 
 Notes for these shell tools:
