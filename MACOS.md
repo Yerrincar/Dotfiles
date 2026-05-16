@@ -2,6 +2,14 @@
 
 This guide installs the tools needed for the configs in this repo and links the config files into the standard macOS locations.
 
+Preferred setup:
+
+```sh
+./install.sh
+```
+
+The rest of this file explains the same pieces manually.
+
 ## 1. Install Xcode Command Line Tools
 
 ```sh
@@ -63,6 +71,7 @@ Notes for these shell tools:
 - if `~/.bashrc` is symlinked to this repo, do not let installers append lines to it manually afterward; this repo already contains the `ble.sh` sourcing logic
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
 - the macOS kitty/tmux config in this repo is set up to use Homebrew Bash at `/opt/homebrew/bin/bash`
+- `install.sh` writes a local Kitty override to `~/.config/kitty-local/macos.conf` so the machine-specific shell path does not modify the repo-managed config tree
 
 Notes:
 
