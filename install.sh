@@ -26,6 +26,18 @@ have() {
   command -v "$1" >/dev/null 2>&1
 }
 
+version_ge() {
+  [[ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1)" == "$2" ]]
+}
+
+current_nvim_version() {
+  if ! have nvim; then
+    return 1
+  fi
+
+  nvim --version | awk 'NR==1 { gsub(/^v/, "", $2); print $2 }'
+}
+
 need_sudo() {
   if [[ ${EUID} -eq 0 ]]; then
     printf ''
@@ -217,6 +229,54 @@ install_linux_packages() {
     ln -s "$(command -v fdfind)" "$HOME/.local/bin/fd"
     log 'Linked ~/.local/bin/fd to fdfind'
   fi
+
+  ensure_modern_neovim_linux
+}
+
+install_upstream_neovim_linux() {
+  local arch url temp_dir install_dir extracted_dir
+
+  case "$(uname -m)" in
+    x86_64)
+      arch='x86_64'
+      ;;
+    aarch64|arm64)
+      arch='arm64'
+      ;;
+    *)
+      warn "Unsupported architecture for upstream Neovim tarball: $(uname -m)"
+      return 1
+      ;;
+  esac
+
+  url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz"
+  temp_dir="$(mktemp -d)"
+  install_dir="$HOME/.local/opt"
+
+  mkdir -p "$install_dir" "$HOME/.local/bin"
+  curl -fsSL "$url" -o "$temp_dir/nvim.tar.gz"
+  tar xzf "$temp_dir/nvim.tar.gz" -C "$temp_dir"
+  extracted_dir="$temp_dir/nvim-linux-${arch}"
+
+  rm -rf "$install_dir/nvim-linux-${arch}"
+  mv "$extracted_dir" "$install_dir/nvim-linux-${arch}"
+  ln -sfn "$install_dir/nvim-linux-${arch}/bin/nvim" "$HOME/.local/bin/nvim"
+  rm -rf "$temp_dir"
+
+  log "Installed upstream Neovim to $install_dir/nvim-linux-${arch}"
+}
+
+ensure_modern_neovim_linux() {
+  local version minimum_version='0.10.0'
+
+  version="$(current_nvim_version || true)"
+  if [[ -n "$version" ]] && version_ge "$version" "$minimum_version"; then
+    log "Neovim version $version is recent enough"
+    return
+  fi
+
+  log 'Installing upstream Neovim because the distro package is too old for this config'
+  install_upstream_neovim_linux
 }
 
 install_shell_tools() {

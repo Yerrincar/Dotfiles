@@ -43,6 +43,12 @@ Shell extras installed outside apt:
 - `bash-it`
 - `ble.sh`
 
+Neovim note:
+
+- Ubuntu server repositories often ship an older `nvim`
+- this config needs a modern Neovim release
+- `install-server.sh` now installs upstream Neovim into `~/.local/bin/nvim` when the distro package is too old
+
 ## What it links
 
 ```sh
