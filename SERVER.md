@@ -32,6 +32,9 @@ Base packages:
 - `build-essential`
 - `ca-certificates`
 - `unzip`
+- `python3`
+- `python3-pip`
+- `python3-venv`
 
 It also tries to install, if available in the distro repositories:
 
@@ -48,6 +51,11 @@ Neovim note:
 - Ubuntu server repositories often ship an older `nvim`
 - this config needs a modern Neovim release
 - `install-server.sh` now installs upstream Neovim into `~/.local/bin/nvim` when the distro package is too old
+
+Python tooling note:
+
+- Mason installs `ruff`, `python-lsp-server`, and `yamllint` through Python tooling
+- the server installer now installs `python3`, `python3-pip`, and `python3-venv` so those Mason packages can install correctly
 
 ## What it links
 

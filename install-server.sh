@@ -105,7 +105,7 @@ install_packages() {
 
   apt_install_packages \
     git neovim tmux ripgrep fd-find make curl xz-utils gawk bash-completion \
-    build-essential ca-certificates unzip || true
+    build-essential ca-certificates unzip python3 python3-pip python3-venv || true
 
   apt_install_packages starship zoxide || true
 

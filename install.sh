@@ -211,14 +211,17 @@ install_linux_packages() {
   if have apt-get; then
     apt_install_packages \
       git neovim tmux ripgrep fd-find make curl xz-utils bash-completion gawk kitty \
+      python3 python3-pip python3-venv \
       zoxide starship terraform helm || true
   elif have dnf; then
     dnf_install_packages \
       git neovim tmux ripgrep fd-find make curl xz bash-completion gawk kitty \
+      python3 python3-pip \
       zoxide starship terraform helm || true
   elif have pacman; then
     pacman_install_packages \
       git neovim tmux ripgrep fd make curl xz bash-completion gawk kitty \
+      python python-pip \
       zoxide starship terraform helm || true
   else
     warn 'No supported Linux package manager detected. Skipping package installation.'
