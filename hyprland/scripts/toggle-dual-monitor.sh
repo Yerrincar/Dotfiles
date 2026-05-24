@@ -22,19 +22,47 @@ notify() {
   fi
 }
 
+move_workspaces() {
+  local target="$1"
+
+  for i in {1..10}; do
+    hyprctl dispatch moveworkspacetomonitor "$i" "$target" >/dev/null 2>&1 || true
+  done
+
+  hyprctl dispatch workspace 1 >/dev/null 2>&1 || true
+  hyprctl dispatch focusmonitor "$target" >/dev/null 2>&1 || true
+}
+
+set_external_only() {
+  hyprctl keyword monitor "$MAIN_MONITOR,preferred,auto,1"
+  hyprctl keyword monitor "$LAPTOP_MONITOR,disable"
+  move_workspaces "$MAIN_MONITOR"
+  notify "External only"
+}
+
+set_laptop_only() {
+  hyprctl keyword monitor "$MAIN_MONITOR,disable"
+  hyprctl keyword monitor "$LAPTOP_MONITOR,preferred,auto,1"
+  move_workspaces "$LAPTOP_MONITOR"
+  notify "Laptop only"
+}
+
+set_dual() {
+  hyprctl keyword monitor "$MAIN_MONITOR,preferred,auto,1"
+  hyprctl keyword monitor "$LAPTOP_MONITOR,preferred,auto,1"
+  move_workspaces "$MAIN_MONITOR"
+  notify "Dual screen"
+}
+
 if ! is_connected "$MAIN_MONITOR"; then
-  notify "Main monitor ($MAIN_MONITOR) is not connected"
+  set_laptop_only
   exit 0
 fi
 
-if is_enabled "$LAPTOP_MONITOR"; then
-  # Dual mode is ON -> turn it OFF (external-only)
-  hyprctl keyword monitor "$LAPTOP_MONITOR,disable"
-  hyprctl dispatch focusmonitor "$MAIN_MONITOR" || true
-  notify "Dual-screen OFF (external only)"
+if is_enabled "$MAIN_MONITOR" && is_enabled "$LAPTOP_MONITOR"; then
+  set_external_only
+elif is_enabled "$MAIN_MONITOR"; then
+  set_laptop_only
 else
-  # Dual mode is OFF -> turn it ON (external + laptop)
-  hyprctl keyword monitor "$MAIN_MONITOR,preferred,auto,1"
-  hyprctl keyword monitor "$LAPTOP_MONITOR,preferred,auto,1"
-  notify "Dual-screen ON (external + laptop)"
+  set_dual
 fi
