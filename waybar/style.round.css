@@ -1,0 +1,356 @@
+@define-color base rgba(5, 5, 5, 0.96);
+@define-color text rgb(230, 230, 230);
+@define-color border rgb(90, 90, 90);
+@define-color cream rgb(245, 245, 245);
+@define-color antique rgb(220, 220, 220);
+@define-color yellow rgb(235, 235, 235);
+@define-color peach rgb(215, 215, 215);
+@define-color blue rgb(225, 225, 225);
+@define-color purple rgb(210, 210, 210);
+@define-color green rgb(235, 235, 235);
+@define-color red rgb(225, 225, 225);
+@define-color red-bright rgb(255, 255, 255);
+@define-color orange rgb(235, 235, 235);
+@define-color green-bright rgb(255, 255, 255);
+
+* {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 16px;
+  min-height: 0;
+}
+
+window#waybar {
+  color: @text;
+  background: @base;
+}
+
+tooltip {
+  background: @base;
+  color: @cream;
+  border-radius: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#workspaces button {
+  padding: 2px 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-right: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background: transparent;
+  border-radius: 0px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  min-width: 24px;
+}
+
+#workspaces button.active {
+  color: rgb(255, 255, 255);
+  background: rgba(255, 255, 255, 0.10);
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 0px;
+  transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    padding-left 200ms cubic-bezier(0.4, 0.6, 0.8, 1);
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgb(255, 255, 255);
+  border-radius: 0px;
+}
+
+#workspaces button:last-child {
+  border-right: 0px;
+}
+
+
+#power-profiles-daemon {
+  color: @orange;
+  background: @base;
+  padding: 0px 9px;
+  margin: 0px;
+  border-radius: 0px;
+}
+
+#power-profiles-daemon {
+  border-right: 0px;
+  border-left: 0px;
+  border-radius: 0px;
+}
+
+#power-profiles-daemon.performance {
+  color: @red-bright;
+}
+#power-profiles-daemon.balanced {
+  color: @orange;
+}
+#power-profiles-daemon.power-saver {
+  color: @green-bright;
+}
+
+#custom-power-menu {
+  color: rgba(255, 255, 255, 0.72);
+  background: @base;
+  border-radius: 0px;
+  padding-left: 8px;
+  padding-right: 10px;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 16px;
+}
+
+#custom-cava,
+#taskbar,
+#power-profiles-daemon,
+#custom-mpris,
+#window,
+#battery,
+#pulseaudio,
+#pulseaudio.microphone,
+#network,
+#bluetooth,
+#temperature,
+#tray,
+#backlight,
+#cpu,
+#memory,
+#custom-tlp,
+
+#clock {
+  background: @base;
+  color: @cream;
+  border-radius: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 8px;
+}
+
+#custom-notification {
+  color: @cream;
+  background: @base;
+  border-radius: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 8px;
+  padding-right: 2px;
+}
+
+#taskbar {
+  background: @base;
+  border-radius: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#taskbar button {
+  background: @base;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-radius: 0px;
+}
+
+#taskbar button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease-in-out;
+}
+
+#taskbar button.active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#power-profiles-daemon {
+  border-right: 0px;
+}
+
+#temperature.critical {
+  color: @red;
+}
+
+#tray {
+  color: @red;
+  border-radius: 0px 0px 0px 0px;
+  background: @base;
+  padding: 0px 2px;
+  margin: 0px;
+}
+
+#custom-menu {
+  color: rgba(255, 255, 255, 0.72);
+  background: @base;
+  border-radius: 0px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0;
+  font-size: 16px;
+}
+
+menu {
+  border-radius: 15px;
+  background: rgb(10, 10, 10);
+  color: rgb(235, 235, 235);
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+menuitem {
+  border-radius: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+#custom-screenrecord {
+  border-radius: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#custom-screenrecord.recording {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 107, 107, 0.549),
+    rgba(238, 90, 82, 0.541)
+  );
+  color: #ffffff;
+  font-weight: bold;
+  animation: pulse 2s infinite;
+}
+
+#custom-screenrecord.recording:hover {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 82, 82, 0.443),
+    rgba(211, 47, 47, 0.451)
+  );
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#custom-cava {
+  border-radius: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+#custom-cava.idle {
+  background: @base;
+  color: @text;
+  border-radius: 0px;
+  padding: 3px;
+  margin: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#custom-mpris {
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 0px;
+  padding: 0px 10px 0px 10px;  
+}
+
+#workspaces {
+  background: @base;
+  border-radius: 0px;
+  margin-left: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
+  margin: 0px;
+}
+
+#window {
+  border-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#network {
+  color: rgba(255, 255, 255, 0.82);
+  background: @base;
+  border-radius: 0px;
+  padding: 0px 5px;
+  margin: 0px;
+}
+
+#bluetooth {
+  color: @blue;
+  border-radius: 0px;
+  padding: 0px 6px;
+}
+
+#pulseaudio {
+  color: rgba(255, 255, 255, 0.72);
+  border-left: 0px;
+  border-right: 0px;
+}
+
+#pulseaudio.microphone {
+  color: rgba(255, 255, 255, 0.6);
+  border-left: 0px;
+  border-radius: 0px;
+}
+
+#battery {
+  color: rgba(255, 255, 255, 0.82);
+  border-radius: 0px;
+  border-left: 0px;
+}
+
+#custom-weather {
+  color: rgba(255, 255, 255, 0.82);
+  border-radius: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 8px;
+  background: @base;
+}
+
+#custom-screenrecord,
+#custom-notification,
+#backlight,
+#cpu,
+#memory,
+#temperature,
+#tray,
+#clock,
+#power-profiles-daemon {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+#temperature {
+  border-left: 0px;
+  border-right: 0px;
+}
+
+#cpu {
+  border-radius: 0px;
+  border-right: 0px;
+}
+#memory {
+  border-radius: 0px;
+  border-left: 0px;
+}
+
+@import url("../waybar-local/theme.css");
