@@ -111,6 +111,23 @@ brew_install_formulae() {
     done
 }
 
+brew_install_formulae_optional() {
+    local brew_path pkg
+    brew_path="$(brew_bin)"
+
+    for pkg in "$@"; do
+        if have "$pkg" || "$brew_path" list "$pkg" >/dev/null 2>&1; then
+            log "Already available: $pkg"
+            continue
+        fi
+
+        log "Trying to install $pkg"
+        if ! "$brew_path" install "$pkg"; then
+            log "Skipping $pkg (brew dependency failed; install a standalone binary into ~/.local/bin if needed)"
+        fi
+    done
+}
+
 install_tmux_release() {
     local arch version temp_dir archive_url install_dir tmux_bin release_json asset_pattern
 
@@ -247,7 +264,9 @@ main() {
 
     setup_brew_shellenv
 
-    brew_install_formulae \
+    ensure_line 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.zprofile"
+
+    brew_install_formulae_optional \
         git neovim ripgrep fd make curl xz gawk terraform helm \
         starship zoxide bash bash-completion@2
 
