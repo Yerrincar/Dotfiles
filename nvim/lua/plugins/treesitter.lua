@@ -1,5 +1,8 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
+  lazy = false,
+  main = 'nvim-treesitter.configs',
+  cmd = { 'TSInstall', 'TSUpdate', 'TSUpdateSync', 'TSInstallInfo' },
   build = ':TSUpdate',
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
   opts = {
@@ -41,18 +44,6 @@ return { -- Highlight, edit, and navigate code
     },
     indent = { enable = true, disable = { 'ruby' } },
   },
-  config = function(_, opts)
-    local ok, configs = pcall(require, 'nvim-treesitter.configs')
-    if not ok then
-      vim.schedule(function()
-        vim.notify('nvim-treesitter is not available yet; run :Lazy sync', vim.log.levels.WARN)
-      end)
-      return
-    end
-
-    configs.setup(opts)
-  end,
-
   -- There are additional nvim-treesitter modules that you can use to interact
   -- with nvim-treesitter. You should go explore a few and see what interests you:
   --
