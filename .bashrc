@@ -35,6 +35,11 @@ case ":$PATH:" in
   *) export PATH="$HOME/.local/bin:$PATH" ;;
 esac
 
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+
 # If not running interactively, don't do anything
 case $- in
 *i*) ;;
@@ -54,8 +59,8 @@ fi
 # Path to the bash it configuration
 export BASH_IT="$HOME/.bash_it"
 
-if command -v go >/dev/null 2>&1; then
-  export PATH="$PATH:$(go env GOPATH)/bin"
+if [[ -d "$HOME/go/bin" ]]; then
+  export PATH="$PATH:$HOME/go/bin"
 fi
 
 alias crontab='EDITOR=vim VISUAL=vim crontab'
