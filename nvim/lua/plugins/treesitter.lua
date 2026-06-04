@@ -1,5 +1,6 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
+  branch = 'master',
   lazy = false,
   main = 'nvim-treesitter.configs',
   cmd = { 'TSInstall', 'TSUpdate', 'TSUpdateSync', 'TSInstallInfo' },
