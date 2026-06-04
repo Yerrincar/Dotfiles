@@ -1,0 +1,9 @@
+# Repo-managed Ghostty config.
+
+font-family = Fira Code
+font-size = 13
+theme = dark:Kanagawa Dragon,light:Kanagawa Lotus
+
+# Machine-specific settings live outside the repo. The installer writes this on
+# macOS so Ghostty starts Homebrew Bash when available.
+config-file = ?../ghostty-local/config

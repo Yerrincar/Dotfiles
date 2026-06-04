@@ -28,7 +28,7 @@ If you do not already have it:
 
 ```sh
 brew install git neovim tmux ripgrep fd make
-brew install --cask kitty
+brew install --cask ghostty
 ```
 
 If Homebrew tells you to add shell integration, do it. On Apple Silicon this is usually:
@@ -70,8 +70,8 @@ Notes for these shell tools:
 - `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
 - if `~/.bashrc` is symlinked to this repo, do not let installers append lines to it manually afterward; this repo already contains the `ble.sh` sourcing logic
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
-- the macOS kitty/tmux config in this repo is set up to use Homebrew Bash at `/opt/homebrew/bin/bash`
-- `install.sh` writes a local Kitty override to `~/.config/kitty-local/macos.conf` so the machine-specific shell path does not modify the repo-managed config tree
+- the macOS Ghostty/tmux config in this repo is set up to use Homebrew Bash when available
+- `install.sh` writes a local Ghostty override to `~/.config/ghostty-local/config` so the machine-specific shell path does not modify the repo-managed config tree
 
 Notes:
 
@@ -80,8 +80,8 @@ Notes:
 - `helm` is useful if you want the full Helm workflow
 - `starship` and `zoxide` are used by `.bashrc`
 - `bash-it` and `ble.sh` are also used by `.bashrc`
-- `kitty` is configured with `font_family Fira Code`, so install that font if you want the same look
-- the Bash files in this repo also bootstrap the Homebrew path for Bash shells opened from Kitty
+- Ghostty is configured with `font-family = Fira Code`, so install that font if you want the same look
+- the Bash files in this repo also bootstrap the Homebrew path for Bash shells opened from Ghostty
 
 ## 4. Clone the dotfiles repo
 
@@ -95,12 +95,25 @@ git clone <your-repo-url> "$HOME/Projects/Dotfiles"
 ```sh
 mkdir -p "$HOME/.config"
 ln -sfn "$HOME/Projects/Dotfiles/nvim" "$HOME/.config/nvim"
-ln -sfn "$HOME/Projects/Dotfiles/kitty" "$HOME/.config/kitty"
+ln -sfn "$HOME/Projects/Dotfiles/ghostty" "$HOME/.config/ghostty"
 ln -sfn "$HOME/Projects/Dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
 ln -sfn "$HOME/Projects/Dotfiles/.bashrc" "$HOME/.bashrc"
 ln -sfn "$HOME/Projects/Dotfiles/.bash_profile" "$HOME/.bash_profile"
 ln -sfn "$HOME/Projects/Dotfiles/.profile" "$HOME/.profile"
 ln -sfn "$HOME/Projects/Dotfiles/.inputrc" "$HOME/.inputrc"
+```
+
+Create the local Ghostty override for Homebrew Bash:
+
+```sh
+mkdir -p "$HOME/.config/ghostty-local"
+if [ -x /opt/homebrew/bin/bash ]; then
+  printf 'command = /opt/homebrew/bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
+elif [ -x /usr/local/bin/bash ]; then
+  printf 'command = /usr/local/bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
+else
+  printf 'command = /bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
+fi
 ```
 
 ## 6. Start Neovim once
@@ -145,9 +158,9 @@ echo 'stty -ixon' >> "$HOME/.zshrc"
 
 ## 8. Notes about these configs
 
-- `kitty` uses OS-specific includes, so the same config works on Linux and macOS
+- Ghostty reads `~/.config/ghostty/config`, which is symlinked to this repo
 - `tmux` auto-selects clipboard integration using `pbcopy` on macOS
-- `kitty` launches Homebrew Bash on macOS via `kitty/os/macos.conf`
+- Ghostty launches Homebrew Bash on macOS via `~/.config/ghostty-local/config`
 - `tmux` panes also prefer Homebrew Bash on macOS
 - `.bashrc` auto-attaches to tmux when opening an interactive shell and `tmux` is installed
 - `.bashrc` is now guarded so optional tools such as `bash-it`, `ble.sh`, `starship`, and `zoxide` do not break startup if they are missing
@@ -158,7 +171,7 @@ echo 'stty -ixon' >> "$HOME/.zshrc"
 ```sh
 nvim --version
 tmux -V
-kitty --version
+ghostty --version
 ```
 
 Inside Neovim you can also run:

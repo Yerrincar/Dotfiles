@@ -31,3 +31,11 @@ Treesitter parser mismatch:
 - If opening Lua/Vim help files fails with `Invalid field name "operator"`, remove stale parsers that override Neovim's bundled parsers
 - From Neovim, run `:TSUninstall lua vim vimdoc query markdown markdown_inline`, then `:Lazy sync`
 - If Neovim cannot open far enough to run commands, use `rm -f ~/.local/share/nvim/lazy/nvim-treesitter/parser/{lua,vim,vimdoc,query,markdown,markdown_inline}.so`, then start Neovim and run `:Lazy sync`
+
+Mason npm certificate errors:
+
+- If Mason fails to install npm-backed packages with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, fix npm/Node certificate trust before retrying Mason
+- First try `brew install ca-certificates node`, then `npm config delete cafile`, then `npm ping`
+- If you are behind a corporate proxy or VPN that intercepts TLS, export the company root CA with `export NODE_EXTRA_CA_CERTS=/path/to/company-root-ca.pem`, then retry `npm ping`
+- Avoid `npm config set strict-ssl false`; it bypasses TLS verification instead of fixing trust
+- After `npm ping` succeeds, reopen Neovim and run `:MasonToolsInstall`
