@@ -123,6 +123,8 @@ if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
 fi
 
 if [[ -n ${BLE_VERSION-} ]]; then
+	bleopt complete_auto_complete=1
+	bleopt complete_auto_delay=300
 	ble-face auto_complete=fg=250
 	ble-face syntax_error=fg=231
 fi
