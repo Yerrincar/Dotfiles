@@ -49,7 +49,7 @@ Optional but useful:
 
 ```sh
 brew install terraform helm
-brew install starship zoxide
+brew install starship zoxide zsh zsh-autosuggestions zsh-syntax-highlighting
 brew install bash bash-completion@2
 brew install --cask font-fira-code
 ```
@@ -70,7 +70,8 @@ Notes for these shell tools:
 - `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
 - if `~/.bashrc` is symlinked to this repo, do not let installers append lines to it manually afterward; this repo already contains the `ble.sh` sourcing logic
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
-- the macOS Ghostty/tmux config in this repo is set up to use Homebrew Bash when available
+- Homebrew `zsh`, `zsh-autosuggestions`, and `zsh-syntax-highlighting` are recommended for the default macOS shell experience
+- the macOS Ghostty/tmux config in this repo is set up to use Homebrew zsh when available
 - `install.sh` writes a local Ghostty override to `~/.config/ghostty-local/config` so the machine-specific shell path does not modify the repo-managed config tree
 
 Notes:
@@ -78,10 +79,10 @@ Notes:
 - `ripgrep`, `fd`, and `make` are needed by the Neovim setup
 - `terraform` is useful because the config uses `terraform_fmt`
 - `helm` is useful if you want the full Helm workflow
-- `starship` and `zoxide` are used by `.bashrc`
+- `starship` and `zoxide` are used by `.zshrc` and `.bashrc`
 - `bash-it` and `ble.sh` are also used by `.bashrc`
 - Ghostty is configured with `font-family = Fira Code`, so install that font if you want the same look
-- the Bash files in this repo also bootstrap the Homebrew path for Bash shells opened from Ghostty
+- `.zshrc` also bootstraps the Homebrew path for zsh shells opened from Ghostty
 
 ## 4. Clone the dotfiles repo
 
@@ -100,19 +101,22 @@ ln -sfn "$HOME/Projects/Dotfiles/tmux/.tmux.conf" "$HOME/.tmux.conf"
 ln -sfn "$HOME/Projects/Dotfiles/.bashrc" "$HOME/.bashrc"
 ln -sfn "$HOME/Projects/Dotfiles/.bash_profile" "$HOME/.bash_profile"
 ln -sfn "$HOME/Projects/Dotfiles/.profile" "$HOME/.profile"
+ln -sfn "$HOME/Projects/Dotfiles/.zshrc" "$HOME/.zshrc"
 ln -sfn "$HOME/Projects/Dotfiles/.inputrc" "$HOME/.inputrc"
 ```
 
-Create the local Ghostty override for Homebrew Bash:
+Create the local Ghostty override for Homebrew zsh:
 
 ```sh
 mkdir -p "$HOME/.config/ghostty-local"
-if [ -x /opt/homebrew/bin/bash ]; then
-  printf 'command = /opt/homebrew/bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
-elif [ -x /usr/local/bin/bash ]; then
-  printf 'command = /usr/local/bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
+if [ -x "$HOME/.homebrew/bin/zsh" ]; then
+  printf 'command = /bin/zsh -lc '\''export PATH="%s/bin:%s/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"; exec %s/bin/zsh -l'\''\n' "$HOME/.homebrew" "$HOME/.homebrew" "$HOME/.homebrew" > "$HOME/.config/ghostty-local/config"
+elif [ -x /opt/homebrew/bin/zsh ]; then
+  printf 'command = /bin/zsh -lc '\''export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"; exec /opt/homebrew/bin/zsh -l'\''\n' > "$HOME/.config/ghostty-local/config"
+elif [ -x /usr/local/bin/zsh ]; then
+  printf 'command = /bin/zsh -lc '\''export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin"; exec /usr/local/bin/zsh -l'\''\n' > "$HOME/.config/ghostty-local/config"
 else
-  printf 'command = /bin/bash --login\n' > "$HOME/.config/ghostty-local/config"
+  printf 'command = /bin/zsh -l\n' > "$HOME/.config/ghostty-local/config"
 fi
 ```
 
@@ -160,9 +164,10 @@ echo 'stty -ixon' >> "$HOME/.zshrc"
 
 - Ghostty reads `~/.config/ghostty/config`, which is symlinked to this repo
 - `tmux` auto-selects clipboard integration using `pbcopy` on macOS
-- Ghostty launches Homebrew Bash on macOS via `~/.config/ghostty-local/config`
-- `tmux` panes also prefer Homebrew Bash on macOS
+- Ghostty launches Homebrew zsh on macOS via `~/.config/ghostty-local/config`
+- `tmux` panes also prefer Homebrew zsh on macOS
 - `.bashrc` auto-attaches to tmux when opening an interactive shell and `tmux` is installed
+- `.zshrc` auto-attaches to tmux when opening an interactive shell and `tmux` is installed
 - `.bashrc` is now guarded so optional tools such as `bash-it`, `ble.sh`, `starship`, and `zoxide` do not break startup if they are missing
 - the Neovim config is already adapted for macOS-only fallbacks where needed
 

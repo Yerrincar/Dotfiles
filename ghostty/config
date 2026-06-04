@@ -4,4 +4,6 @@ font-family = Fira Code
 font-size = 13
 theme = dark:Kanagawa Dragon,light:Kanagawa Lotus
 
-command = /bin/bash -lc 'export PATH="/Users/t06/.homebrew/bin:/Users/t06/.homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"; exec /Users/t06/.homebrew/bin/bash --login'
+command = /bin/zsh -lc 'export PATH="/Users/t06/.homebrew/bin:/Users/t06/.homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"; exec /Users/t06/.homebrew/bin/zsh -l'
+
+config-file = ?../ghostty-local/config
