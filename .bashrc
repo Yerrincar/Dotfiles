@@ -2,10 +2,18 @@
 # Si no es un shell interactivo, salir
 [[ $- != *i* ]] && return
 
-if [[ -x /opt/homebrew/bin/brew ]]; then
+if [[ -x "$HOME/.homebrew/bin/brew" ]]; then
+  eval "$("$HOME/.homebrew/bin/brew" shellenv)"
+elif [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -x /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+if [[ -n ${HOMEBREW_PREFIX-} && -r "$HOMEBREW_PREFIX/etc/ca-certificates/cert.pem" ]]; then
+  export SSL_CERT_FILE="$HOMEBREW_PREFIX/etc/ca-certificates/cert.pem"
+  export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
+  export NODE_EXTRA_CA_CERTS="$SSL_CERT_FILE"
 fi
 
 case ":$PATH:" in
