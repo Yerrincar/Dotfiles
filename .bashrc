@@ -133,8 +133,9 @@ if [[ -f "$HOME/.inputrc" ]]; then
   bind -f "$HOME/.inputrc"
 fi
 
-# Load Bash It
-if [[ -f "$BASH_IT/bash_it.sh" ]]; then
+# Load Bash It only when explicitly requested. It is useful for aliases/plugins,
+# but it can add several seconds to shell startup on macOS.
+if [[ ${BASH_IT_ENABLE-} == 1 && -f "$BASH_IT/bash_it.sh" ]]; then
   source "$BASH_IT/bash_it.sh"
 fi
 
