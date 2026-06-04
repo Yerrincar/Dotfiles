@@ -25,6 +25,12 @@ if [[ -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
   exec tmux new-session -A -s main
 fi
 
+if [[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]]; then
+  source /opt/homebrew/etc/profile.d/bash_completion.sh
+elif [[ -r /usr/local/etc/profile.d/bash_completion.sh ]]; then
+  source /usr/local/etc/profile.d/bash_completion.sh
+fi
+
 # Path to the bash it configuration
 export BASH_IT="$HOME/.bash_it"
 
