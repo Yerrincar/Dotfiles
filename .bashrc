@@ -2,12 +2,26 @@
 # Si no es un shell interactivo, salir
 [[ $- != *i* ]] && return
 
-if [[ -x "$HOME/.homebrew/bin/brew" ]]; then
-  eval "$("$HOME/.homebrew/bin/brew" shellenv)"
-elif [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -x /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+if [[ -d "$HOME/.homebrew" ]]; then
+  export HOMEBREW_PREFIX="$HOME/.homebrew"
+elif [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+elif [[ -d /usr/local/Homebrew || -d /usr/local/Cellar ]]; then
+  export HOMEBREW_PREFIX=/usr/local
+fi
+
+if [[ -n ${HOMEBREW_PREFIX-} ]]; then
+  export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+  export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
+
+  case ":$PATH:" in
+    *":$HOMEBREW_PREFIX/bin:"*) ;;
+    *) export PATH="$HOMEBREW_PREFIX/bin:$PATH" ;;
+  esac
+  case ":$PATH:" in
+    *":$HOMEBREW_PREFIX/sbin:"*) ;;
+    *) export PATH="$HOMEBREW_PREFIX/sbin:$PATH" ;;
+  esac
 fi
 
 if [[ -n ${HOMEBREW_PREFIX-} && -r "$HOMEBREW_PREFIX/etc/ca-certificates/cert.pem" ]]; then
@@ -33,10 +47,8 @@ if [[ -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
   exec tmux new-session -A -s main
 fi
 
-if [[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]]; then
-  source /opt/homebrew/etc/profile.d/bash_completion.sh
-elif [[ -r /usr/local/etc/profile.d/bash_completion.sh ]]; then
-  source /usr/local/etc/profile.d/bash_completion.sh
+if [[ ${BASH_COMPLETION_ENABLE-} == 1 && -n ${HOMEBREW_PREFIX-} && -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]]; then
+  source "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
 fi
 
 # Path to the bash it configuration
@@ -118,7 +130,7 @@ export LANG=en_US.UTF-8
 # Uncomment this to make Bash-it create alias reload.
 # export BASH_IT_RELOAD_LEGACY=1
 # Cargar ble.sh (Bash Line Editor) sin adjuntar aún
-if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
+if [[ ${BLE_ENABLE-1} == 1 && -f "$HOME/.local/share/blesh/ble.sh" ]]; then
   source "$HOME/.local/share/blesh/ble.sh" --noattach
 fi
 
@@ -149,7 +161,7 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 # Adjuntar ble.sh ahora que el prompt (Starship) está inicializado
-[[ ${BLE_VERSION-} ]] && ble-attach
+[[ ${BLE_ENABLE-1} == 1 && ${BLE_VERSION-} ]] && ble-attach
 
 if [[ -f "$HOME/.local/bin/env" ]]; then
   . "$HOME/.local/bin/env"
