@@ -25,3 +25,9 @@ Terminal note:
 - Quick check: `stty -a | grep ixon`
 - Fix for the current shell session: `stty -ixon`
 - To keep that change across sessions, add `stty -ixon` to `~/.zshrc`
+
+Treesitter parser mismatch:
+
+- If opening Lua/Vim help files fails with `Invalid field name "operator"`, remove stale parsers that override Neovim's bundled parsers
+- From Neovim, run `:TSUninstall lua vim vimdoc query markdown markdown_inline`, then `:Lazy sync`
+- If Neovim cannot open far enough to run commands, use `rm -f ~/.local/share/nvim/lazy/nvim-treesitter/parser/{lua,vim,vimdoc,query,markdown,markdown_inline}.so`, then start Neovim and run `:Lazy sync`
