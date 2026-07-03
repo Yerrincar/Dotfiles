@@ -67,6 +67,7 @@ This installs or configures these tools outside Homebrew when possible:
 - `zsh-autosuggestions` into `~/.oh-my-zsh/custom/plugins`
 - `zsh-syntax-highlighting` into `~/.oh-my-zsh/custom/plugins`
 - `tmux` standalone on macOS when a suitable prebuilt release is available
+- if no standalone `tmux` release is available, it builds `libevent`, `ncurses`, and `tmux` into `~/.local`; this still does not use `sudo`, but it requires compiler tools such as `cc` and `make`
 
 Install the extra Bash tools expected by `.bashrc`:
 

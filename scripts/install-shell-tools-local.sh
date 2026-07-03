@@ -3,6 +3,7 @@
 set -euo pipefail
 
 BIN_DIR="$HOME/.local/bin"
+PREFIX="$HOME/.local"
 OMZ_DIR="$HOME/.oh-my-zsh"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -45,13 +46,17 @@ latest_release_url() {
     curl -fsSL "https://api.github.com/repos/$repo/releases/latest" |
       sed -n 's/.*"browser_download_url": "\([^"]*\)".*/\1/p' |
       grep -E "$pattern" |
-      head -n 1
+      head -n 1 || true
   else
     wget -qO- "https://api.github.com/repos/$repo/releases/latest" |
       sed -n 's/.*"browser_download_url": "\([^"]*\)".*/\1/p' |
       grep -E "$pattern" |
-      head -n 1
+      head -n 1 || true
   fi
+}
+
+make_jobs() {
+  getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || printf '2\n'
 }
 
 install_starship() {
@@ -135,6 +140,123 @@ install_zsh_plugin() {
   git clone --depth 1 "https://github.com/$repo.git" "$target"
 }
 
+install_local_zsh_plugin() {
+  local name="$1"
+  local repo="$2"
+  local target="$HOME/.local/share/$name"
+
+  if [[ -d "$target" ]]; then
+    log "Already available: $name ($target)"
+    return
+  fi
+
+  if ! have git; then
+    log "Skipping $name: git is not installed"
+    return 1
+  fi
+
+  log "Installing $name to $target"
+  git clone --depth 1 "https://github.com/$repo.git" "$target"
+}
+
+build_libevent_local() {
+  local version temp_dir jobs
+
+  if [[ -r "$PREFIX/include/event2/event.h" ]]; then
+    log "Already available: libevent ($PREFIX)"
+    return
+  fi
+
+  version='2.1.12-stable'
+  jobs="$(make_jobs)"
+  temp_dir="$(mktemp -d)"
+
+  log "Building libevent $version in $PREFIX"
+  download_to "https://github.com/libevent/libevent/releases/download/release-${version}/libevent-${version}.tar.gz" "$temp_dir/libevent.tar.gz"
+  tar xzf "$temp_dir/libevent.tar.gz" -C "$temp_dir"
+  (
+    cd "$temp_dir/libevent-${version}"
+    ./configure --prefix="$PREFIX" --disable-openssl
+    make -j "$jobs"
+    make install
+  )
+  rm -rf "$temp_dir"
+}
+
+build_ncurses_local() {
+  local version temp_dir jobs
+
+  if [[ -r "$PREFIX/include/ncursesw/curses.h" || -r "$PREFIX/include/curses.h" ]]; then
+    log "Already available: ncurses ($PREFIX)"
+    return
+  fi
+
+  version='6.5'
+  jobs="$(make_jobs)"
+  temp_dir="$(mktemp -d)"
+
+  log "Building ncurses $version in $PREFIX"
+  download_to "https://ftp.gnu.org/pub/gnu/ncurses/ncurses-${version}.tar.gz" "$temp_dir/ncurses.tar.gz"
+  tar xzf "$temp_dir/ncurses.tar.gz" -C "$temp_dir"
+  (
+    cd "$temp_dir/ncurses-${version}"
+    ./configure \
+      --prefix="$PREFIX" \
+      --enable-widec \
+      --enable-pc-files \
+      --with-pkg-config-libdir="$PREFIX/lib/pkgconfig" \
+      --without-ada \
+      --without-debug \
+      --without-manpages \
+      --without-progs \
+      --without-tests
+    make -j "$jobs"
+    make install
+  )
+  rm -rf "$temp_dir"
+}
+
+build_tmux_local() {
+  local version temp_dir jobs rpath_flags
+
+  if [[ -x "$BIN_DIR/tmux" ]]; then
+    log "Already available: tmux ($BIN_DIR/tmux)"
+    return
+  fi
+
+  for tool in cc make tar; do
+    if ! have "$tool"; then
+      log "Cannot build tmux locally: missing $tool"
+      return 1
+    fi
+  done
+
+  build_libevent_local
+  build_ncurses_local
+
+  version='3.5a'
+  jobs="$(make_jobs)"
+  temp_dir="$(mktemp -d)"
+  rpath_flags=''
+  if [[ "$OS" == 'Darwin' ]]; then
+    rpath_flags="-Wl,-rpath,$PREFIX/lib"
+  fi
+
+  log "Building tmux $version in $PREFIX"
+  download_to "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz" "$temp_dir/tmux.tar.gz"
+  tar xzf "$temp_dir/tmux.tar.gz" -C "$temp_dir"
+  (
+    cd "$temp_dir/tmux-${version}"
+    PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
+      CPPFLAGS="-I$PREFIX/include -I$PREFIX/include/ncursesw" \
+      LDFLAGS="-L$PREFIX/lib $rpath_flags" \
+      ./configure --prefix="$PREFIX"
+    make -j "$jobs"
+    make install
+  )
+  rm -rf "$temp_dir"
+}
+
 install_tmux_best_effort() {
   local pattern archive_url temp_dir
 
@@ -163,8 +285,9 @@ install_tmux_best_effort() {
 
   archive_url="$(latest_release_url nelsonenzo/tmux-appimage "$pattern")"
   if [[ -z "$archive_url" ]]; then
-    log 'Could not find standalone tmux release asset; build tmux locally or install it another way'
-    return 1
+    log 'Could not find standalone tmux release asset; trying local source build'
+    build_tmux_local
+    return
   fi
 
   log "Installing standalone tmux to $BIN_DIR"
@@ -176,7 +299,7 @@ install_tmux_best_effort() {
 
   if ! [[ -x "$BIN_DIR/tmux" ]]; then
     log 'Downloaded tmux archive, but no executable tmux binary was found'
-    return 1
+    build_tmux_local
   fi
 }
 
@@ -185,6 +308,8 @@ main() {
   install_starship || true
   install_zoxide || true
   install_oh_my_zsh || true
+  install_local_zsh_plugin zsh-autosuggestions zsh-users/zsh-autosuggestions || true
+  install_local_zsh_plugin zsh-syntax-highlighting zsh-users/zsh-syntax-highlighting || true
   install_zsh_plugin zsh-autosuggestions zsh-users/zsh-autosuggestions || true
   install_zsh_plugin zsh-syntax-highlighting zsh-users/zsh-syntax-highlighting || true
   install_tmux_best_effort || true
