@@ -250,7 +250,7 @@ build_tmux_local() {
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig" \
       CPPFLAGS="-I$PREFIX/include -I$PREFIX/include/ncursesw" \
       LDFLAGS="-L$PREFIX/lib $rpath_flags" \
-      ./configure --prefix="$PREFIX"
+      ./configure --prefix="$PREFIX" --disable-utf8proc
     make -j "$jobs"
     make install
   )
