@@ -22,6 +22,14 @@ return   { -- Fuzzy Finder (files, lsp, etc)
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
+      vim.F = vim.F or {}
+      vim.F.if_nil = vim.F.if_nil or function(value, default)
+        if value == nil then
+          return default
+        end
+        return value
+      end
+
       local telescope = require 'telescope'
       local actions = require 'telescope.actions'
       local builtin = require 'telescope.builtin'
@@ -137,4 +145,3 @@ return   { -- Fuzzy Finder (files, lsp, etc)
       end, { desc = '[S]earch [N]eovim files' })
     end,
 }
-

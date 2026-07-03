@@ -20,7 +20,7 @@ return {
         -- buffer_close_icon = '✗',
         -- buffer_close_icon = '✕',
         close_icon = '',
-        path_components = 1, -- Show only the file name without the directory
+        path_components = 2, -- Show one parent directory, e.g. config/model.go
         modified_icon = '●',
         left_trunc_marker = '',
         right_trunc_marker = '',

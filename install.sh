@@ -211,16 +211,19 @@ install_linux_packages() {
   if have apt-get; then
     apt_install_packages \
       git neovim tmux ripgrep fd-find make curl xz-utils bash-completion gawk kitty \
+      grim slurp wl-clipboard libnotify-bin \
       python3 python3-pip python3-venv \
       zoxide starship terraform helm || true
   elif have dnf; then
     dnf_install_packages \
       git neovim tmux ripgrep fd-find make curl xz bash-completion gawk kitty \
+      grim slurp wl-clipboard libnotify \
       python3 python3-pip \
       zoxide starship terraform helm || true
   elif have pacman; then
     pacman_install_packages \
       git neovim tmux ripgrep fd make curl xz bash-completion gawk kitty \
+      grim slurp wl-clipboard libnotify \
       python python-pip \
       zoxide starship terraform helm || true
   else
@@ -331,6 +334,11 @@ write_macos_ghostty_override() {
     shell_name='zsh'
     shell_flag='-l'
     path_prefix='/usr/local/bin:/usr/local/sbin'
+  elif [[ -x /bin/zsh ]]; then
+    shell_path='/bin/zsh'
+    shell_name='zsh'
+    shell_flag='-l'
+    path_prefix='/usr/local/bin'
   elif [[ -x /opt/homebrew/bin/bash ]]; then
     shell_path='/opt/homebrew/bin/bash'
     shell_name='bash'

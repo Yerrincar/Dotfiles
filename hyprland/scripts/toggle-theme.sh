@@ -5,11 +5,13 @@ STATE_DIR="$HOME/.config/hypr-local"
 WAYBAR_DIR="$HOME/.config/waybar-local"
 KITTY_DIR="$HOME/.config/kitty-local"
 TMUX_DIR="$HOME/.tmux-local"
+NVIM_DIR="$HOME/.config/nvim-local"
 STATE_FILE="$STATE_DIR/theme.mode"
 HYPR_FILE="$STATE_DIR/theme.conf"
 WAYBAR_FILE="$WAYBAR_DIR/theme.css"
 KITTY_FILE="$KITTY_DIR/theme.conf"
 TMUX_FILE="$TMUX_DIR/theme.conf"
+NVIM_FILE="$NVIM_DIR/theme.lua"
 
 notify() {
   if command -v notify-send >/dev/null 2>&1; then
@@ -62,60 +64,68 @@ setw -g window-status-style 'fg=#8a8a8a,bg=#050505'
 setw -g window-status-current-style 'fg=#ffffff,bg=#141414,bold'
 set-option -g status-right '#[fg=#a8a8a8,bg=#050505] %Y-%m-%d #[fg=#d8d8d8,bg=#050505]%H:%M '
 EOF
+
+  cat > "$NVIM_FILE" <<'EOF'
+return {
+  background = 'dark',
+  contrast = 'hard',
+  transparent_mode = true,
+}
+EOF
 }
 
 write_light() {
   cat > "$HYPR_FILE" <<'EOF'
 general {
-    col.active_border = rgba(00000066)
-    col.inactive_border = rgba(cfcfcfaa)
+    col.active_border = rgba(d65d0eff)
+    col.inactive_border = rgba(7c6f64aa)
 }
 EOF
 
   cat > "$WAYBAR_FILE" <<'EOF'
-@define-color base rgba(248, 248, 248, 0.97);
-@define-color text rgb(20, 20, 20);
-@define-color border rgb(190, 190, 190);
-@define-color cream rgb(25, 25, 25);
-@define-color antique rgb(45, 45, 45);
-@define-color yellow rgb(35, 35, 35);
-@define-color peach rgb(55, 55, 55);
-@define-color blue rgb(30, 30, 30);
-@define-color purple rgb(70, 70, 70);
-@define-color green rgb(35, 35, 35);
-@define-color red rgb(45, 45, 45);
-@define-color red-bright rgb(0, 0, 0);
-@define-color orange rgb(35, 35, 35);
-@define-color green-bright rgb(0, 0, 0);
+@define-color base rgba(251, 241, 199, 0.97);
+@define-color text rgb(60, 56, 54);
+@define-color border rgb(168, 153, 132);
+@define-color cream rgb(60, 56, 54);
+@define-color antique rgb(80, 73, 69);
+@define-color yellow rgb(215, 153, 33);
+@define-color peach rgb(214, 93, 14);
+@define-color blue rgb(69, 133, 136);
+@define-color purple rgb(177, 98, 134);
+@define-color green rgb(152, 151, 26);
+@define-color red rgb(204, 36, 29);
+@define-color red-bright rgb(157, 0, 6);
+@define-color orange rgb(214, 93, 14);
+@define-color green-bright rgb(121, 116, 14);
 
 window#waybar {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  border-bottom: 1px solid rgba(168, 153, 132, 0.55);
 }
 
 tooltip {
-  color: rgb(20, 20, 20);
-  border: 1px solid rgba(0, 0, 0, 0.10);
+  color: rgb(60, 56, 54);
+  border: 1px solid rgba(168, 153, 132, 0.55);
 }
 
 menu {
-  background: rgb(245, 245, 245);
-  color: rgb(20, 20, 20);
-  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: rgb(251, 241, 199);
+  color: rgb(60, 56, 54);
+  border: 1px solid rgba(168, 153, 132, 0.55);
 }
 
 #workspaces button {
-  color: rgba(0, 0, 0, 0.55);
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  color: rgba(60, 56, 54, 0.62);
+  border-right: 1px solid rgba(168, 153, 132, 0.35);
 }
 
 #workspaces button.active {
-  color: rgb(0, 0, 0);
-  background: rgba(0, 0, 0, 0.03);
+  color: rgb(40, 40, 40);
+  background: rgba(215, 153, 33, 0.18);
 }
 
 #workspaces button:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: rgb(0, 0, 0);
+  background: rgba(214, 93, 14, 0.14);
+  color: rgb(40, 40, 40);
 }
 
 #custom-power-menu,
@@ -135,45 +145,53 @@ menu {
 #tray,
 #clock,
 #power-profiles-daemon {
-  color: rgba(0, 0, 0, 0.72);
+  color: rgba(60, 56, 54, 0.82);
 }
 EOF
 
   cat > "$KITTY_FILE" <<'EOF'
-foreground #0a0a0a
-background #f5f5f5
-selection_foreground #f5f5f5
-selection_background #2a2a2a
-cursor #0a0a0a
-cursor_text_color #f5f5f5
-url_color #111111
-active_tab_foreground #0a0a0a
-active_tab_background #f5f5f5
-inactive_tab_foreground #555555
-inactive_tab_background #f5f5f5
-color0  #0a0a0a
-color1  #141414
-color2  #1f1f1f
-color3  #2a2a2a
-color4  #161616
-color5  #222222
-color6  #2e2e2e
-color7  #3c3c3c
-color8  #2a2a2a
-color9  #101010
-color10 #1b1b1b
-color11 #262626
-color12 #131313
-color13 #1f1f1f
-color14 #2b2b2b
-color15 #4a4a4a
+foreground #3c3836
+background #fbf1c7
+selection_foreground #fbf1c7
+selection_background #665c54
+cursor #3c3836
+cursor_text_color #fbf1c7
+url_color #458588
+active_tab_foreground #282828
+active_tab_background #fabd2f
+inactive_tab_foreground #7c6f64
+inactive_tab_background #ebdbb2
+color0  #fbf1c7
+color1  #cc241d
+color2  #98971a
+color3  #d79921
+color4  #458588
+color5  #b16286
+color6  #689d6a
+color7  #7c6f64
+color8  #928374
+color9  #9d0006
+color10 #79740e
+color11 #b57614
+color12 #076678
+color13 #8f3f71
+color14 #427b58
+color15 #3c3836
 EOF
 
   cat > "$TMUX_FILE" <<'EOF'
-set -g status-style 'fg=#1a1a1a,bg=#f0f0f0'
-setw -g window-status-style 'fg=#5a5a5a,bg=#f0f0f0'
-setw -g window-status-current-style 'fg=#111111,bg=#dcdcdc,bold'
-set-option -g status-right '#[fg=#4a4a4a,bg=#f0f0f0] %Y-%m-%d #[fg=#1a1a1a,bg=#f0f0f0]%H:%M '
+set -g status-style 'fg=#3c3836,bg=#fbf1c7'
+setw -g window-status-style 'fg=#7c6f64,bg=#fbf1c7'
+setw -g window-status-current-style 'fg=#282828,bg=#fabd2f,bold'
+set-option -g status-right '#[fg=#7c6f64,bg=#fbf1c7] %Y-%m-%d #[fg=#3c3836,bg=#fbf1c7]%H:%M '
+EOF
+
+  cat > "$NVIM_FILE" <<'EOF'
+return {
+  background = 'light',
+  contrast = 'hard',
+  transparent_mode = false,
+}
 EOF
 }
 
@@ -198,7 +216,7 @@ reload_theme() {
 main() {
   local mode requested_mode
 
-  mkdir -p "$STATE_DIR" "$WAYBAR_DIR" "$KITTY_DIR" "$TMUX_DIR"
+  mkdir -p "$STATE_DIR" "$WAYBAR_DIR" "$KITTY_DIR" "$TMUX_DIR" "$NVIM_DIR"
 
   mode="dark"
   if [[ -f "$STATE_FILE" ]]; then

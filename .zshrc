@@ -15,6 +15,7 @@ if [[ -n ${HOMEBREW_PREFIX-} ]]; then
 fi
 
 path=("$HOME/.local/bin" $path)
+path=("/usr/local/bin" "/usr/local/sbin" $path)
 
 if [[ -n ${HOMEBREW_PREFIX-} && -r "$HOMEBREW_PREFIX/etc/ca-certificates/cert.pem" ]]; then
   export SSL_CERT_FILE="$HOMEBREW_PREFIX/etc/ca-certificates/cert.pem"
@@ -32,14 +33,26 @@ if [[ -z ${TMUX-} ]] && command -v tmux >/dev/null 2>&1; then
   exec tmux new-session -A -s main
 fi
 
-autoload -Uz compinit
-mkdir -p "$HOME/.cache/zsh"
-compinit -d "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
+if [[ -r "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
+  export ZSH="$HOME/.oh-my-zsh"
+  ZSH_THEME=""
+  plugins=(git)
+  source "$ZSH/oh-my-zsh.sh"
+else
+  autoload -Uz compinit
+  mkdir -p "$HOME/.cache/zsh"
+  compinit -d "$HOME/.cache/zsh/zcompdump-$ZSH_VERSION"
+fi
 
 if [[ -n ${HOMEBREW_PREFIX-} ]]; then
   [[ -r "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
   [[ -r "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
+
+[[ -r "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -r "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[[ -r "$HOME/.local/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$HOME/.local/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -r "$HOME/.local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "$HOME/.local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"

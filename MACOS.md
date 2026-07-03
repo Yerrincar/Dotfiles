@@ -49,10 +49,24 @@ Optional but useful:
 
 ```sh
 brew install terraform helm
-brew install starship zoxide zsh zsh-autosuggestions zsh-syntax-highlighting
 brew install bash bash-completion@2
 brew install --cask font-fira-code
 ```
+
+If you do not want the interactive shell stack to depend on Homebrew, install it into user-local paths instead:
+
+```sh
+./scripts/install-shell-tools-local.sh
+```
+
+This installs or configures these tools outside Homebrew when possible:
+
+- `starship` into `~/.local/bin`
+- `zoxide` into `~/.local/bin`
+- Oh My Zsh into `~/.oh-my-zsh`
+- `zsh-autosuggestions` into `~/.oh-my-zsh/custom/plugins`
+- `zsh-syntax-highlighting` into `~/.oh-my-zsh/custom/plugins`
+- `tmux` standalone on macOS when a suitable prebuilt release is available
 
 Install the extra Bash tools expected by `.bashrc`:
 
@@ -70,8 +84,8 @@ Notes for these shell tools:
 - `ble.sh` is loaded from `~/.local/share/blesh/ble.sh`
 - if `~/.bashrc` is symlinked to this repo, do not let installers append lines to it manually afterward; this repo already contains the `ble.sh` sourcing logic
 - Homebrew `bash` plus `bash-completion@2` is recommended if you want better Bash completion support on macOS than the system `/bin/bash`
-- Homebrew `zsh`, `zsh-autosuggestions`, and `zsh-syntax-highlighting` are recommended for the default macOS shell experience
-- the macOS Ghostty/tmux config in this repo is set up to use Homebrew zsh when available
+- Homebrew `zsh`, `zsh-autosuggestions`, and `zsh-syntax-highlighting` are optional; the repo also supports the system `/bin/zsh` plus local Oh My Zsh plugins
+- the macOS Ghostty/tmux config in this repo is set up to use Homebrew zsh when available, then fall back to `/bin/zsh`
 - `install.sh` writes a local Ghostty override to `~/.config/ghostty-local/config` so the machine-specific shell path does not modify the repo-managed config tree
 
 Notes:
@@ -105,7 +119,7 @@ ln -sfn "$HOME/Projects/Dotfiles/.zshrc" "$HOME/.zshrc"
 ln -sfn "$HOME/Projects/Dotfiles/.inputrc" "$HOME/.inputrc"
 ```
 
-Create the local Ghostty override for Homebrew zsh:
+Create the local Ghostty override only when you want Ghostty to use a Homebrew shell. If Homebrew was removed, delete this file or write `/bin/zsh` instead:
 
 ```sh
 mkdir -p "$HOME/.config/ghostty-local"
@@ -118,6 +132,13 @@ elif [ -x /usr/local/bin/zsh ]; then
 else
   printf 'command = /bin/zsh -l\n' > "$HOME/.config/ghostty-local/config"
 fi
+```
+
+After uninstalling Homebrew, fix a stale Ghostty override with:
+
+```sh
+mkdir -p "$HOME/.config/ghostty-local"
+printf 'command = /bin/zsh -l\n' > "$HOME/.config/ghostty-local/config"
 ```
 
 ## 6. Start Neovim once

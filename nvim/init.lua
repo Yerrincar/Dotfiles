@@ -37,6 +37,14 @@ require('lazy').setup {
   require 'plugins.gitsigns',
   require 'plugins.alpha',
   require 'plugins.indent-blankline',
+  {
+    'theHamsta/nvim-dap-virtual-text',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    opts = {
+      commented = true,
+      virt_text_pos = 'eol',
+    },
+  },
   require 'plugins.debug',
   require 'plugins.typescript-tools',
   require 'plugins.misc',

@@ -232,6 +232,11 @@ write_macos_ghostty_override() {
         shell_name="zsh"
         shell_flag="-l"
         path_prefix="$brew_prefix/bin:$brew_prefix/sbin"
+    elif [[ -x /bin/zsh ]]; then
+        shell_path="/bin/zsh"
+        shell_name="zsh"
+        shell_flag="-l"
+        path_prefix="/usr/local/bin"
     elif [[ -x "$brew_prefix/bin/bash" ]]; then
         shell_path="$brew_prefix/bin/bash"
         shell_name="bash"
